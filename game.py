@@ -125,6 +125,9 @@ def run_game():
     :return:
     """
     print('Welcome to Tic Tac Toe!')
+    # winner = None
+    player1_wins = 0
+    player2_wins = 0
 
     while True:
         # Reset the board
@@ -152,7 +155,8 @@ def run_game():
 
                 if win_check(the_board, player1_marker):
                     display_board(the_board)
-                    print('Congratulations! You have won the game!')
+                    player1_wins = player1_wins + 1
+                    print(f'player 1 {player1_marker} have won the game!')
                     game_on = False
                 else:
                     if full_board_check(the_board):
@@ -171,7 +175,8 @@ def run_game():
 
                 if win_check(the_board, player2_marker):
                     display_board(the_board)
-                    print('Player 2 has won!')
+                    player2_wins = player2_wins + 1
+                    print(f'Player 2 {player2_marker} has won!')
                     game_on = False
                 else:
                     if full_board_check(the_board):
@@ -181,9 +186,16 @@ def run_game():
                     else:
                         turn = 'Player 1'
 
+        print(f"player 1: {player1_wins}  points!")
+        print(f"player 2 :  {player2_wins} points!")
+
         if not replay():
             print("hope you enjoyed it!")
             break
+
+        if input("Reset score (y/n): ") == "y":
+            player1_wins = 0
+            player2_wins = 0
 
 
 if __name__ == "__main__":
