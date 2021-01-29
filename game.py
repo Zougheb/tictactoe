@@ -28,7 +28,7 @@ def player_input():
     marker = ''
 
     while not (marker == 'X' or marker == 'O'):
-        marker = input('Player 1: Do you want to be X or O? ').upper()
+        marker = input('Do you want to be X or O? ').upper()
 
     if marker == 'X':
         return ('X', 'O')
@@ -106,8 +106,21 @@ def player_choice(board):
     :return: the position
     """
     position = 0
-    while position not in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
-        position = int(input('Choose your next position: (1-9) '))
+    run = True
+    marker = place_marker
+    while run:
+        try:
+            position = int(input('Choose your next position: (1-9) '))
+            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+                if space_check(board, position):
+                    run = False
+                    place_marker(board, marker, position)
+                else:
+                    print('sorry this space is occupied!')
+            else:
+                print('please enter a number within the range!')
+        except:
+            print('please enter a number!')
     return position
 
 
@@ -125,25 +138,42 @@ def run_game():
     :return:
     """
     print('Welcome to Tic Tac Toe!')
-    # winner = None
     player1_wins = 0
     player2_wins = 0
 
+    with open('score.txt', 'r') as f:
+        f.read(int(player1_wins))
+        f.read(int(player2_wins))
+
+
     while True:
         # Reset the board
+        # file_name = "score.txt"
+        # score_file = open(file_name, 'w')
+        # score_file.write(str(player1_wins))
+        # score_file.write(str(player2_wins))
+
+        # with open('score.txt', 'r') as f:
+        #     f.read(int(player1_wins))
+        #     f.read(int(player2_wins))
+
+        # read_score = open("score.txt", "r")
+        # print(read_score.read())
+
+        game_on = True
         the_board = [' '] * 10
         player1_marker, player2_marker = player_input()
         turn = choose_first()
         print(turn + ' will go first.')
 
-        play_game = input('Are you ready to play? Enter Yes or No.')
-
-        if play_game.lower()[0] == 'y':
-            game_on = True
-        else:
-            # game_on = False
-            print('No worries! come back whenever you are ready :)')
-            break
+        # play_game = input('Are you ready to play? Enter Yes or No. ')
+        #
+        # if play_game.lower()[0] == 'y':
+        #     game_on = True
+        # else:
+        #     # game_on = False
+        #     print('No worries! come back whenever you are ready :)')
+        #     break
 
         while game_on:
             if turn == 'Player 1':
@@ -156,7 +186,7 @@ def run_game():
                 if win_check(the_board, player1_marker):
                     display_board(the_board)
                     player1_wins = player1_wins + 1
-                    print(f'player 1 {player1_marker} have won the game!')
+                    print(f'player1 -{player1_marker}- have won the game!')
                     game_on = False
                 else:
                     if full_board_check(the_board):
@@ -176,7 +206,7 @@ def run_game():
                 if win_check(the_board, player2_marker):
                     display_board(the_board)
                     player2_wins = player2_wins + 1
-                    print(f'Player 2 {player2_marker} has won!')
+                    print(f'Player2 -{player2_marker}- has won!')
                     game_on = False
                 else:
                     if full_board_check(the_board):
@@ -189,6 +219,16 @@ def run_game():
         print(f"player 1: {player1_wins}  points!")
         print(f"player 2 :  {player2_wins} points!")
 
+        with open('score.txt', 'w') as f:
+            f.write(str(player1_wins))
+            f.write(str(player2_wins))
+            f.close()
+        # read_score = open("score.txt", "r")
+        # read_score.close()
+        # print(read_score.read())
+
+
+
         if not replay():
             print("hope you enjoyed it!")
             break
@@ -196,7 +236,25 @@ def run_game():
         if input("Reset score (y/n): ") == "y":
             player1_wins = 0
             player2_wins = 0
+        # else:
+        #     with open('score.txt', 'w') as f:
+        #         f.write(str(player1_wins))
+        #         f.write(str(player2_wins))
+        #         f.close()
 
 
 if __name__ == "__main__":
     run_game()
+
+
+
+
+
+
+
+
+
+
+
+
+
