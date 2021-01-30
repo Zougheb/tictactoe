@@ -36,6 +36,12 @@ def player_input():
         return ('O', 'X')
 
 
+def player_name_input():
+    name1 = input('please enter your name? ')
+    name2 = input( 'player 2 : please enter your name? ')
+    return (name1, name2)
+
+
 def place_marker(board, marker, position):
     """
     This function places the user's mark to the chosen position on the board
@@ -83,7 +89,8 @@ def space_check(board, position):
     :param position: the position to check if it's free
     :return: True if it's empty
     """
-    return board[position] == ' '
+
+    return board[position].lower() != 'x' or board[position].lower() != 'o'
 
 
 def full_board_check(board):
@@ -92,10 +99,10 @@ def full_board_check(board):
     :param board:
     :return: boolean Value (True if full, False otherwise)
     """
-    if board.count(' ') > 1:
-        return False
-    else:
+    if board.count('X') + board.count('O') == 9:
         return True
+    else:
+        return False
 
 
 def player_choice(board):
@@ -106,8 +113,21 @@ def player_choice(board):
     :return: the position
     """
     position = 0
-    while position not in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
-        position = int(input('Choose your next position: (1-9) '))
+    while True:
+            # position not in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
+        position = input('Choose your next position: (1-9) ')
+        try:
+            position = int(position)
+            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
+                if space_check(board, position):
+                    break
+                else:
+                    print('this position is taken')
+            else:
+                print('please pick a valid number')
+        except:
+            print('please enter a number')
+
     return position
 
 
@@ -119,6 +139,12 @@ def replay():
     return input('Do you want to play again? Enter Yes or No: ').lower().startswith('y')
 
 
+def player_turn(the_board, player_marker):
+    display_board(the_board)
+    position = player_choice(the_board)
+    place_marker(the_board, player_marker, position)
+
+
 def run_game():
     """
     This is the entry point to run the above functions
@@ -128,8 +154,9 @@ def run_game():
 
     while True:
         # Reset the board
-        the_board = [' '] * 10
+        the_board = ['','1', '2','3', '4', '5', '6', '7', '8', '9']
         player1_marker, player2_marker = player_input()
+        player1_name , player2_name = player_name_input()
         turn = choose_first()
         print(turn + ' will go first.')
 
@@ -146,13 +173,11 @@ def run_game():
             if turn == 'Player 1':
                 # Player1's turn.
 
-                display_board(the_board)
-                position = player_choice(the_board)
-                place_marker(the_board, player1_marker, position)
+                player_turn(the_board, player1_marker)
 
                 if win_check(the_board, player1_marker):
                     display_board(the_board)
-                    print('Congratulations! You have won the game!')
+                    print(f'Congratulations! player 1 {player1_name} have won the game!')
                     game_on = False
                 else:
                     if full_board_check(the_board):
@@ -165,13 +190,11 @@ def run_game():
             else:
                 # Player2's turn.
 
-                display_board(the_board)
-                position = player_choice(the_board)
-                place_marker(the_board, player2_marker, position)
+                player_turn(the_board, player2_marker)
 
                 if win_check(the_board, player2_marker):
                     display_board(the_board)
-                    print('Player 2 has won!')
+                    print(f'Player 2 {player2_name} has won!')
                     game_on = False
                 else:
                     if full_board_check(the_board):
