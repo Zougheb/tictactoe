@@ -113,21 +113,21 @@ def player_choice(board):
     :return: the position
     """
     position = 0
-    while True:
-            # position not in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
-        position = input('Choose your next position: (1-9) ')
+    run = True
+    marker = place_marker
+    while run:
         try:
-            position = int(position)
-            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
+            position = int(input('Choose your next position: (1-9) '))
+            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
                 if space_check(board, position):
-                    break
+                    run = False
+                    place_marker(board, marker, position)
                 else:
-                    print('this position is taken')
+                    print('sorry this space is occupied!')
             else:
-                print('please pick a valid number')
+                print('please enter a number within the range!')
         except:
-            print('please enter a number')
-
+            print('please enter a number!')
     return position
 
 
@@ -151,6 +151,8 @@ def run_game():
     :return:
     """
     print('Welcome to Tic Tac Toe!')
+    player1_wins = 0
+    player2_wins = 0
 
     while True:
         # Reset the board
@@ -177,6 +179,7 @@ def run_game():
 
                 if win_check(the_board, player1_marker):
                     display_board(the_board)
+                    player1_wins = player1_wins + 1
                     print(f'Congratulations! player 1 {player1_name} have won the game!')
                     game_on = False
                 else:
@@ -194,6 +197,7 @@ def run_game():
 
                 if win_check(the_board, player2_marker):
                     display_board(the_board)
+                    player2_wins = player2_wins + 1
                     print(f'Player 2 {player2_name} has won!')
                     game_on = False
                 else:
@@ -204,9 +208,16 @@ def run_game():
                     else:
                         turn = 'Player 1'
 
+        print(f"player 1: {player1_wins}  points!")
+        print(f"player 2 :  {player2_wins} points!")
+
         if not replay():
             print("hope you enjoyed it!")
             break
+
+        if input("Reset score (y/n): ") == "y":
+            player1_wins = 0
+            player2_wins = 0
 
 
 if __name__ == "__main__":
