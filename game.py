@@ -89,7 +89,6 @@ def space_check(board, position):
     :param position: the position to check if it's free
     :return: True if it's empty
     """
-
     return board[position].lower() != 'x' or board[position].lower() != 'o'
 
 
@@ -112,22 +111,20 @@ def player_choice(board):
     :param board:
     :return: the position
     """
-    position = 0
-    run = True
-    marker = place_marker
-    while run:
+    while True:
+        # position not in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
+        position = input('Choose your next position: (1-9) ')
         try:
-            position = int(input('Choose your next position: (1-9) '))
-            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+            position = int(position)
+            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
                 if space_check(board, position):
-                    run = False
-                    place_marker(board, marker, position)
+                    break
                 else:
-                    print('sorry this space is occupied!')
+                    print('this position is taken')
             else:
-                print('please enter a number within the range!')
+                print('please pick a valid number')
         except:
-            print('please enter a number!')
+            print('please enter a number')
     return position
 
 
@@ -208,8 +205,8 @@ def run_game():
                     else:
                         turn = 'Player 1'
 
-        print(f"player 1: {player1_wins}  points!")
-        print(f"player 2 :  {player2_wins} points!")
+        print(f"{player1_name}: {player1_wins}  points!")
+        print(f"{player2_name} :  {player2_wins} points!")
 
         if not replay():
             print("hope you enjoyed it!")
