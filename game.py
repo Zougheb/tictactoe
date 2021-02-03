@@ -89,7 +89,7 @@ def space_check(board, position):
     :param position: the position to check if it's free
     :return: True if it's empty
     """
-    return board[position].lower() != 'x' or board[position].lower() != 'o'
+    return board[position].lower() != 'x' and board[position].lower() != 'o'
 
 
 def full_board_check(board):
@@ -111,20 +111,22 @@ def player_choice(board):
     :param board:
     :return: the position
     """
-    while True:
-        # position not in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
-        position = input('Choose your next position: (1-9) ')
+    position = 0
+    run = True
+    marker = place_marker
+    while run:
         try:
-            position = int(position)
-            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9] or not space_check(board, position):
+            position = int(input('Choose your next position: (1-9) '))
+            if position in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
                 if space_check(board, position):
-                    break
+                    run = False
+                    place_marker(board, marker, position)
                 else:
-                    print('this position is taken')
+                    print('sorry this space is occupied!')
             else:
-                print('please pick a valid number')
+                print('please enter a number within the range!')
         except:
-            print('please enter a number')
+            print('please enter a number!')
     return position
 
 
@@ -154,6 +156,7 @@ def run_game():
     while True:
         # Reset the board
         the_board = ['','1', '2','3', '4', '5', '6', '7', '8', '9']
+        # the_board= [' '] *10
         player1_marker, player2_marker = player_input()
         player1_name , player2_name = player_name_input()
         turn = choose_first()
